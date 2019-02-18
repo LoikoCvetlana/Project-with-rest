@@ -1,0 +1,2 @@
+HHH000478: Unsuccessful: 
+    drop table user_review if exists
