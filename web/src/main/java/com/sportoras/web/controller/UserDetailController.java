@@ -5,6 +5,7 @@ import com.sportoras.database.entity.UserDetail;
 import com.sportoras.service.dto.userDto.UserDetailCreateDto;
 import com.sportoras.service.dto.userDto.UserDetailUpdateDto;
 import com.sportoras.service.dto.userDto.UserDetailUpdateDtoJson;
+import com.sportoras.service.exception.EntityAlreadyExistException;
 import com.sportoras.service.service.UserDetailService;
 import com.sportoras.service.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ public class UserDetailController {
 
     @PostMapping(value = "/detail-save", consumes = "application/json", produces = "application/json")
     @ResponseBody
-    public ResponseEntity<Void> saveProduct(@RequestBody UserDetailCreateDto userDetailCreateDto) {
+    public ResponseEntity<Void> saveUserDetail(@RequestBody UserDetailCreateDto userDetailCreateDto) {
         //        User user = userService.findUserByEmail(authentication.getName());
         User user = userService.findUserById(11L);
         userDetailCreateDto.setUser(user);

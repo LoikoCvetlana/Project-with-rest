@@ -1,0 +1,45 @@
+package com.sportoras.service.exception.api;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Builder;
+import lombok.Data;
+import org.springframework.http.HttpStatus;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Data
+public class ApiError {
+
+    private HttpStatus status;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
+    private LocalDateTime timestamp;
+    private String message;
+    private  String exceptionType;
+    private  String statusDescription;
+
+    private ApiError() {
+        timestamp = LocalDateTime.now();
+    }
+
+    public ApiError(HttpStatus status) {
+        this();
+        this.status = status;
+    }
+
+    public ApiError(HttpStatus status, Throwable ex) {
+        this();
+        this.status = status;
+        this.statusDescription = statusDescription;
+        this.exceptionType = exceptionType;
+        this.message = "Unexpected error";
+    }
+
+    public ApiError(HttpStatus status, String message, Throwable ex) {
+        this();
+        this.status = status;
+        this.statusDescription = statusDescription;
+        this.exceptionType = exceptionType;
+        this.message = message;
+    }
+}

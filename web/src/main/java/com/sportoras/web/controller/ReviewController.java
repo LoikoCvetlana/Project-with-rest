@@ -32,25 +32,25 @@ public class ReviewController {
         return new ResponseEntity<>(reviews, HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "/delete-review/{id}",  produces = "application/json")
+    @DeleteMapping(value = "/delete-review/{id}", produces = "application/json")
     @ResponseBody
     public ResponseEntity<Void> deleteReview(@PathVariable("id") long id) {
         Optional<Review> review = reviewService.findById(id);
-        if (!review.isPresent()) {
-            LOGGER.error("Unable to delete. Review with id " + id + " not found");
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
         reviewService.deleteReview(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping(value = "/review-save",  produces = "application/json", consumes = "application/json")
+    @PostMapping(value = "/review-save", produces = "application/json", consumes = "application/json")
     @ResponseBody
     public ResponseEntity<ReviewDto> saveReview(@RequestBody ReviewDto reviewDto, Authentication authentication) {
 //        User user = userService.findUserByEmail(authentication.getName());
         User user = userService.findUserById(1L);
         reviewDto.setUser(user);
         Review review = reviewService.saveReview(reviewDto);
+        if (review == null) {
+            LOGGER.error("Review didn't save");
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

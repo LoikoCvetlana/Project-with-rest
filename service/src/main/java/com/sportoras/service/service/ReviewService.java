@@ -3,6 +3,7 @@ package com.sportoras.service.service;
 import com.sportoras.database.entity.Review;
 import com.sportoras.database.repository.ReviewRepository;
 import com.sportoras.service.dto.reviewDto.ReviewDto;
+import com.sportoras.service.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,6 @@ import java.util.stream.Collectors;
 public class ReviewService {
 
     private final ReviewRepository reviewRepository;
-
 
     public List<ReviewDto> findAllReviews() {
         return reviewRepository.findAll().stream()
@@ -38,6 +38,8 @@ public class ReviewService {
 
     @Transactional
     public void deleteReview(Long reviewId) {
+        reviewRepository.findById(reviewId).orElseThrow(() ->
+                new EntityNotFoundException("Review with id " + reviewId + " not found."));
         reviewRepository.deleteById(reviewId);
     }
 

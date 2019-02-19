@@ -3,12 +3,14 @@ package com.sportoras.service.service;
 import com.sportoras.database.entity.User;
 import com.sportoras.database.repository.UserRepository;
 import com.sportoras.service.dto.userDto.UserBasicDto;
+import com.sportoras.service.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,11 +21,15 @@ public class UserService {
     private final UserRepository userRepository;
 
     public User findUserById(Long userId) {
-        return userRepository.findUserById(userId);
+        User user = userRepository.findUserById(userId);
+        Optional.ofNullable(user).orElseThrow(() -> new EntityNotFoundException("User with id " + userId + " not found."));
+        return user;
     }
 
     public User findUserByEmail(String email) {
-        return userRepository.findUserByEmail(email);
+        User user = userRepository.findUserByEmail(email);
+//        Optional.ofNullable(user).orElseThrow(() -> new EntityNotFoundException("User with email " + email + " not found."));
+        return user;
     }
 
     public List<UserBasicDto> findAllUsers() {

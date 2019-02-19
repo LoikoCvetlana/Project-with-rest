@@ -3,6 +3,8 @@ package com.sportoras.service.service;
 import com.sportoras.database.entity.Material;
 import com.sportoras.database.repository.MaterialRepository;
 import com.sportoras.service.dto.Material.MaterialDto;
+import com.sportoras.service.exception.EntityAlreadyExistException;
+import com.sportoras.service.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @CacheConfig(cacheNames = "materials")
@@ -22,12 +25,16 @@ public class MaterialService {
     private final MaterialRepository materialRepository;
 
     public Material findById(Long materialId) {
-        return materialRepository.findMaterialById(materialId);
+        Material material = materialRepository.findMaterialById(materialId);
+        Optional.ofNullable(material).orElseThrow(() -> new EntityNotFoundException("Material with id " + materialId + " not found."));
+        return material;
     }
 
 
     public Material findMaterialByName(String name) {
-        return materialRepository.findByName(name);
+        Material material = materialRepository.findByName(name);
+        Optional.ofNullable(material).orElseThrow(() -> new EntityNotFoundException("Material with name " + name + " not found."));
+        return material;
     }
 
     @Cacheable
@@ -39,9 +46,13 @@ public class MaterialService {
 
     @Transactional
     public Material saveMaterial(MaterialDto materialDto) {
-        return materialRepository.save(Material.builder()
+        if (materialRepository.findByName(materialDto.getName())!=null) {
+            throw new EntityAlreadyExistException("Material already exists");
+        }
+        Material material = materialRepository.save(Material.builder()
                 .name(materialDto.getName())
                 .description(materialDto.getDescription())
                 .build());
+        return material;
     }
 }

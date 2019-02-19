@@ -6,10 +6,13 @@ import com.sportoras.database.repository.UserDetailRepository;
 import com.sportoras.database.repository.UserRepository;
 import com.sportoras.service.dto.userDto.UserDetailCreateDto;
 import com.sportoras.service.dto.userDto.UserDetailUpdateDto;
+import com.sportoras.service.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -33,6 +36,8 @@ public class UserDetailService {
 
     @Transactional
     public UserDetail updarteUserDetail(UserDetailUpdateDto userDetailUpdateDto) {
+        Optional.ofNullable(userDetailRepository.findByUser(userDetailUpdateDto.getUser())).orElseThrow(() ->
+                new EntityNotFoundException("User detail not found"));
         return userDetailRepository.save(UserDetail.builder()
                 .id(userDetailUpdateDto.getId())
                 .user(userDetailUpdateDto.getUser())

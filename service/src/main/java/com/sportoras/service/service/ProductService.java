@@ -6,6 +6,8 @@ import com.sportoras.database.repository.ProductRepository;
 import com.sportoras.service.dto.productDto.ProductBasicDto;
 import com.sportoras.service.dto.productDto.ProductCreateDto;
 import com.sportoras.service.dto.productDto.ProductDtoFilter;
+import com.sportoras.service.exception.EntityAlreadyExistException;
+import com.sportoras.service.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @CacheConfig(cacheNames = "products")
@@ -26,7 +29,9 @@ public class ProductService {
     private final MaterialRepository materialRepository;
 
     public Product findProductById(Long productId) {
-        return productRepository.findProductById(productId);
+        Product product = productRepository.findProductById(productId);
+        Optional.ofNullable(product).orElseThrow(() -> new EntityNotFoundException("Product with id " + productId + " not found."));
+        return product;
     }
 
     public Product findProductByArticle(String article) {
@@ -49,6 +54,9 @@ public class ProductService {
 
     @Transactional
     public Product saveProduct(ProductCreateDto productCreateDto) {
+        if (productRepository.findByArticle(productCreateDto.getArticle()) != null) {
+            throw new EntityAlreadyExistException("Product already exists");
+        }
         Product savedProduct = productRepository.save(
                 Product.builder()
                         .name(productCreateDto.getName())
@@ -57,7 +65,6 @@ public class ProductService {
                         .value(productCreateDto.getValue())
                         .material(productCreateDto.getMaterial())
                         .build());
-
         return savedProduct;
     }
 
