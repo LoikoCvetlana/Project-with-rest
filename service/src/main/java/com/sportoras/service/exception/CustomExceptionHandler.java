@@ -31,4 +31,13 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         apiError.setExceptionType(ex.getClass().getSimpleName());
         return handleExceptionInternal(ex,  apiError, new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
+
+    @ExceptionHandler(BadRequestException.class)
+    protected ResponseEntity<Object> handleBadRequest(RuntimeException ex, WebRequest request) {
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
+        apiError.setMessage(ex.getMessage());
+        apiError.setStatusDescription(apiError.getStatus().getReasonPhrase());
+        apiError.setExceptionType(ex.getClass().getSimpleName());
+        return handleExceptionInternal(ex,  apiError, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
 }

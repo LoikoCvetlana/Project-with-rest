@@ -6,6 +6,7 @@ import com.sportoras.database.repository.ProductRepository;
 import com.sportoras.service.dto.productDto.ProductBasicDto;
 import com.sportoras.service.dto.productDto.ProductCreateDto;
 import com.sportoras.service.dto.productDto.ProductDtoFilter;
+import com.sportoras.service.exception.BadRequestException;
 import com.sportoras.service.exception.EntityAlreadyExistException;
 import com.sportoras.service.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -65,7 +66,11 @@ public class ProductService {
                         .value(productCreateDto.getValue())
                         .material(productCreateDto.getMaterial())
                         .build());
-        return savedProduct;
+        if (savedProduct.getArticle() == null || savedProduct.getPicture() == null ||
+                savedProduct.getName() == null || savedProduct.getValue() == null){
+            throw new BadRequestException ("The form is filled incorrect.");
+        }
+            return savedProduct;
     }
 
     public List<ProductBasicDto> findProductByMaterial(Long id) {

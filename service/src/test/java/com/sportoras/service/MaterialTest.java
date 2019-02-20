@@ -3,6 +3,8 @@ package com.sportoras.service;
 import com.sportoras.database.entity.Material;
 import com.sportoras.service.configuration.ServiceConfiguration;
 import com.sportoras.service.dto.Material.MaterialDto;
+import com.sportoras.service.exception.EntityAlreadyExistException;
+import com.sportoras.service.exception.EntityNotFoundException;
 import com.sportoras.service.service.MaterialService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,5 +45,17 @@ public class MaterialTest {
         Material material = materialService.saveMaterial(new MaterialDto("Test Material", "Test description"));
         Material materialTest = materialService.findById(material.getId());
         assertNotNull(materialTest);
+    }
+
+    @Test(expected = EntityAlreadyExistException.class)
+    public void checkSaveExceptin() {
+        Material material = materialService.saveMaterial(new MaterialDto("Test Material", "Test description"));
+        Material material2 = materialService.saveMaterial(new MaterialDto("Test Material", "Test description"));
+
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void checkFindByIdExceptin() {
+        Material material = materialService.findById(100L);
     }
 }

@@ -24,8 +24,7 @@ public class MaterialController {
     @GetMapping(value = "/materials", produces = "application/json")
     @ResponseBody
     public ResponseEntity<List<MaterialDto>> listAllMaterials() {
-        List<MaterialDto> materials = materialService.findAllMaterials();
-        return new ResponseEntity<>(materials, HttpStatus.OK);
+        return new ResponseEntity<>(materialService.findAllMaterials(), HttpStatus.OK);
     }
 
     @PostMapping(value = "/material-save", produces = "application/json", consumes = "application/json")
@@ -38,7 +37,6 @@ public class MaterialController {
     @GetMapping(value = "/material-info/{id}", produces = "application/json")
     @ResponseBody
     public ResponseEntity<Material> getMaterialById(@PathVariable("id") long id) {
-        Material material =materialService.findById(id);
-        return new ResponseEntity<>(material, HttpStatus.OK);
+        return new ResponseEntity<>(materialService.findById(id), HttpStatus.OK);
     }
 }

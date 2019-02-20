@@ -3,6 +3,7 @@ package com.sportoras.service.service;
 import com.sportoras.database.entity.Material;
 import com.sportoras.database.repository.MaterialRepository;
 import com.sportoras.service.dto.Material.MaterialDto;
+import com.sportoras.service.exception.BadRequestException;
 import com.sportoras.service.exception.EntityAlreadyExistException;
 import com.sportoras.service.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,6 @@ public class MaterialService {
         return material;
     }
 
-
     public Material findMaterialByName(String name) {
         Material material = materialRepository.findByName(name);
         Optional.ofNullable(material).orElseThrow(() -> new EntityNotFoundException("Material with name " + name + " not found."));
@@ -46,13 +46,16 @@ public class MaterialService {
 
     @Transactional
     public Material saveMaterial(MaterialDto materialDto) {
-        if (materialRepository.findByName(materialDto.getName())!=null) {
+        if (materialRepository.findByName(materialDto.getName()) != null) {
             throw new EntityAlreadyExistException("Material already exists");
         }
         Material material = materialRepository.save(Material.builder()
                 .name(materialDto.getName())
                 .description(materialDto.getDescription())
                 .build());
+        if (material.getName() == null || material.getDescription() == null) {
+            throw new BadRequestException("The form is filled incorrect.");
+        }
         return material;
     }
 }

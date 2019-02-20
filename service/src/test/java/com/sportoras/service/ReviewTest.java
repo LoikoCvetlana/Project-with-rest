@@ -4,6 +4,8 @@ import com.sportoras.database.entity.*;
 import com.sportoras.database.repository.UserRepository;
 import com.sportoras.service.configuration.ServiceConfiguration;
 import com.sportoras.service.dto.reviewDto.ReviewDto;
+import com.sportoras.service.exception.EntityAlreadyExistException;
+import com.sportoras.service.exception.EntityNotFoundException;
 import com.sportoras.service.service.ReviewService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.*;
@@ -56,4 +59,13 @@ public class ReviewTest {
         Review reviewTest= reviewService.findById(review.getId()).orElse(null);
         assertNull(reviewTest);
     }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void checkeleteExceptin() {
+        List<ReviewDto> rewiews = reviewService.findAllReviews();
+        reviewService.deleteReview((long)rewiews.size()+1);
+        Review deletedReview = reviewService.findById((long)rewiews.size()+1).get();
+    }
+
+
 }

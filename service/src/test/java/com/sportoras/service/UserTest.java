@@ -1,13 +1,17 @@
 package com.sportoras.service;
 
 import com.sportoras.database.entity.FullName;
+import com.sportoras.database.entity.Material;
 import com.sportoras.database.entity.User;
 import com.sportoras.database.entity.UserDetail;
 import com.sportoras.database.repository.UserDetailRepository;
 import com.sportoras.database.repository.UserRepository;
 import com.sportoras.service.configuration.ServiceConfiguration;
+import com.sportoras.service.dto.Material.MaterialDto;
 import com.sportoras.service.dto.userDto.UserBasicDto;
 import com.sportoras.service.dto.userDto.UserDetailCreateDto;
+import com.sportoras.service.exception.EntityAlreadyExistException;
+import com.sportoras.service.exception.EntityNotFoundException;
 import com.sportoras.service.service.UserDetailService;
 import com.sportoras.service.service.UserService;
 import org.junit.Test;
@@ -20,7 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = ServiceConfiguration.class)
@@ -69,5 +74,16 @@ public class UserTest {
                 .user(user)
                 .build());
         assertNotNull(userDetail);
+    }
+
+    @Test(expected = EntityAlreadyExistException.class)
+    public void checkSaveExceptin() {
+        User user = userRepository.save(new User("testmail", "111", FullName.of("Irina", "Nikolaevna")));
+        User user2 = userRepository.save(new User("testmail", "111", FullName.of("Irina2", "Nikolaevna2")));
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void checkFindByIdExceptin() {
+        User user = userService.findUserById(100L);
     }
 }

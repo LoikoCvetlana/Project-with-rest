@@ -6,6 +6,8 @@ import com.sportoras.service.configuration.ServiceConfiguration;
 import com.sportoras.service.dto.Material.MaterialDto;
 import com.sportoras.service.dto.productDto.ProductBasicDto;
 import com.sportoras.service.dto.productDto.ProductCreateDto;
+import com.sportoras.service.exception.EntityAlreadyExistException;
+import com.sportoras.service.exception.EntityNotFoundException;
 import com.sportoras.service.service.MaterialService;
 import com.sportoras.service.service.ProductService;
 import org.junit.Test;
@@ -62,5 +64,20 @@ public class ProductTest {
                 ("TstsProduct","KP1","/KP1", BigDecimal.valueOf(100.24),material));
         Product productTest = productService.findProductById(product.getId());
         assertNotNull(productTest);
+    }
+
+    @Test(expected = EntityAlreadyExistException.class)
+    public void checkSaveExceptin() {
+        Material material = materialService.saveMaterial(new MaterialDto("Test Material", "Test description"));
+        ProductCreateDto productCreateDto = new ProductCreateDto
+                ("TstsProduct","KP1","/KP1", BigDecimal.valueOf(100.24),material);
+        Product product = productService.saveProduct(productCreateDto);
+        Product product2 = productService.saveProduct(productCreateDto);
+
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void checkFindByIdExceptin() {
+        Product product = productService.findProductById(100L);
     }
 }
