@@ -50,7 +50,7 @@ public class ProductsController {
                 .value(productCreateDtoJson.getValue())
                 .build();
         productService.saveProduct(productCreateDto);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping(value = "/product-info/{id}", produces = "application/json")

@@ -6,6 +6,7 @@ import com.sportoras.database.repository.UserDetailRepository;
 import com.sportoras.database.repository.UserRepository;
 import com.sportoras.service.dto.userDto.UserDetailCreateDto;
 import com.sportoras.service.dto.userDto.UserDetailUpdateDto;
+import com.sportoras.service.exception.EntityDidntSaveException;
 import com.sportoras.service.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +26,17 @@ public class UserDetailService {
 
     @Transactional
     public UserDetail saveUserDetail(UserDetailCreateDto userDetailCreateDto) {
-        return userDetailRepository.save(UserDetail.builder()
+        UserDetail userDetail = userDetailRepository.save(UserDetail.builder()
                 .user(userDetailCreateDto.getUser())
                 .company(userDetailCreateDto.getCompany())
                 .position(userDetailCreateDto.getPosition())
                 .phone(userDetailCreateDto.getPhone())
                 .otherInformation(userDetailCreateDto.getOtherInformation())
                 .build());
+        if (userDetail == null) {
+            throw new EntityDidntSaveException("User detail not saved. Try again");
+        }
+        return userDetail;
     }
 
     @Transactional
@@ -52,4 +57,10 @@ public class UserDetailService {
         return userDetailRepository.findByUser(user);
     }
 
+    @Transactional
+    public void deleteUserDetail(Long reviewId) {
+        userDetailRepository.findById(reviewId).orElseThrow(() ->
+                new EntityNotFoundException("Review with id " + reviewId + " not found."));
+        userDetailRepository.deleteById(reviewId);
+    }
 }

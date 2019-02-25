@@ -6,14 +6,13 @@ import com.sportoras.service.dto.reviewDto.ReviewDto;
 import com.sportoras.service.service.ReviewService;
 import com.sportoras.service.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,7 +22,6 @@ public class ReviewController {
 
     private final ReviewService reviewService;
     private final UserService userService;
-    private Logger LOGGER = LogManager.getLogger(ReviewController.class);
 
     @GetMapping(value = "/reviews", produces = "application/json")
     @ResponseBody
@@ -46,11 +44,8 @@ public class ReviewController {
 //        User user = userService.findUserByEmail(authentication.getName());
         User user = userService.findUserById(1L);
         reviewDto.setUser(user);
+        reviewDto.setDate(LocalDate.now());
         Review review = reviewService.saveReview(reviewDto);
-        if (review == null) {
-            LOGGER.error("Review didn't save");
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

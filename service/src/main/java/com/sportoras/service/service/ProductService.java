@@ -1,13 +1,13 @@
 package com.sportoras.service.service;
 
 import com.sportoras.database.entity.Product;
-import com.sportoras.database.repository.MaterialRepository;
 import com.sportoras.database.repository.ProductRepository;
 import com.sportoras.service.dto.productDto.ProductBasicDto;
 import com.sportoras.service.dto.productDto.ProductCreateDto;
 import com.sportoras.service.dto.productDto.ProductDtoFilter;
 import com.sportoras.service.exception.BadRequestException;
 import com.sportoras.service.exception.EntityAlreadyExistException;
+import com.sportoras.service.exception.EntityDidntSaveException;
 import com.sportoras.service.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private final MaterialRepository materialRepository;
 
     public Product findProductById(Long productId) {
         Product product = productRepository.findProductById(productId);
@@ -58,6 +57,11 @@ public class ProductService {
         if (productRepository.findByArticle(productCreateDto.getArticle()) != null) {
             throw new EntityAlreadyExistException("Product already exists");
         }
+        if (productCreateDto.getArticle() == null || productCreateDto.getPicture() == null ||
+                productCreateDto.getName() == null || productCreateDto.getValue() == null){
+
+            throw new BadRequestException ("The form is filled incorrect.");
+        }
         Product savedProduct = productRepository.save(
                 Product.builder()
                         .name(productCreateDto.getName())
@@ -66,9 +70,9 @@ public class ProductService {
                         .value(productCreateDto.getValue())
                         .material(productCreateDto.getMaterial())
                         .build());
-        if (savedProduct.getArticle() == null || savedProduct.getPicture() == null ||
-                savedProduct.getName() == null || savedProduct.getValue() == null){
-            throw new BadRequestException ("The form is filled incorrect.");
+
+        if (savedProduct == null) {
+            throw new EntityDidntSaveException("Product not saved. Try again");
         }
             return savedProduct;
     }

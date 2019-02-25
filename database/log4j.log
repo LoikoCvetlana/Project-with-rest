@@ -1,8 +1,0 @@
-2019-02-07 10:40:32,255 WARN  - SQL Error: 23503, SQLState: 23503
-2019-02-07 10:40:32,256 ERROR - Нарушение ссылочной целостности: "FKW04FQ456SC4TK26TNBHVR59O: ORAZ_STORAGE.PRODUCT FOREIGN KEY(MATERIAL_ID) REFERENCES ORAZ_STORAGE.MATERIAL(ID) (1)"
-Referential integrity constraint violation: "FKW04FQ456SC4TK26TNBHVR59O: ORAZ_STORAGE.PRODUCT FOREIGN KEY(MATERIAL_ID) REFERENCES ORAZ_STORAGE.MATERIAL(ID) (1)"; SQL statement:
-delete from oraz_storage.material [23503-197]
-2019-02-07 10:40:34,297 WARN  - SQL Error: 50200, SQLState: HYT00
-2019-02-07 10:40:34,298 ERROR - Время ожидания блокировки таблицы  истекло
-Timeout trying to lock table ; SQL statement:
-delete from oraz_storage.material [50200-197]

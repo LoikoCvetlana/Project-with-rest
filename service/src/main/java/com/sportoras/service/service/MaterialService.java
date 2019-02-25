@@ -5,11 +5,14 @@ import com.sportoras.database.repository.MaterialRepository;
 import com.sportoras.service.dto.Material.MaterialDto;
 import com.sportoras.service.exception.BadRequestException;
 import com.sportoras.service.exception.EntityAlreadyExistException;
+import com.sportoras.service.exception.EntityDidntSaveException;
 import com.sportoras.service.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,12 +52,15 @@ public class MaterialService {
         if (materialRepository.findByName(materialDto.getName()) != null) {
             throw new EntityAlreadyExistException("Material already exists");
         }
+        if (materialDto.getName() == null || materialDto.getDescription() == null) {
+            throw new BadRequestException("The form is filled incorrect.");
+        }
         Material material = materialRepository.save(Material.builder()
                 .name(materialDto.getName())
                 .description(materialDto.getDescription())
                 .build());
-        if (material.getName() == null || material.getDescription() == null) {
-            throw new BadRequestException("The form is filled incorrect.");
+        if (material == null) {
+            throw new EntityDidntSaveException("Material not saved. Try again");
         }
         return material;
     }

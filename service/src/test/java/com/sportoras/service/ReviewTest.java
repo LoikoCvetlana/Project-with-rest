@@ -61,10 +61,11 @@ public class ReviewTest {
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void checkeleteExceptin() {
-        List<ReviewDto> rewiews = reviewService.findAllReviews();
-        reviewService.deleteReview((long)rewiews.size()+1);
-        Review deletedReview = reviewService.findById((long)rewiews.size()+1).get();
+    public void checkDeleteExceptin() {
+        User user = new User("testmail", "111", FullName.of("Irina", "Nikolaeva"));
+        Review review = reviewService.saveReview(new ReviewDto(user, "TestRewiew", LocalDate.now()));
+        reviewService.deleteReview(review.getId());
+        Review deletedReview = reviewService.findById(review.getId()).orElseThrow(() -> new EntityNotFoundException("boo!"));
     }
 
 

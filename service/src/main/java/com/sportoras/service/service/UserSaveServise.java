@@ -5,6 +5,7 @@ import com.sportoras.database.repository.UserRepository;
 import com.sportoras.service.dto.userDto.UserCreateDto;
 import com.sportoras.service.exception.BadRequestException;
 import com.sportoras.service.exception.EntityAlreadyExistException;
+import com.sportoras.service.exception.EntityDidntSaveException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,6 +27,9 @@ public class UserSaveServise {
         if (userRepository.findByEmail(userCreateDto.getEmail()).isPresent()) {
             throw new EntityAlreadyExistException("User already exists");
         }
+        if (userCreateDto.getEmail() == null || userCreateDto.getPassword() == null) {
+            throw new BadRequestException("The form is filled incorrect. Enter the email and password in form.");
+        }
         User user = userRepository.save(User.builder()
                 .fullName(userCreateDto.getFullName())
                 .email(userCreateDto.getEmail())
@@ -33,8 +37,9 @@ public class UserSaveServise {
                 .registrationDate(LocalDate.now())
                 .role("User")
                 .build());
-        if (user.getEmail() == null || user.getPassword() == null) {
-            throw new BadRequestException("The form is filled incorrect. Enter the email and password in form.");
+
+        if (user == null) {
+            throw new EntityDidntSaveException("User not saved. Try again");
         }
 
     }

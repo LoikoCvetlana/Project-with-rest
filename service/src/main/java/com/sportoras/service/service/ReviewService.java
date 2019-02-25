@@ -4,6 +4,7 @@ import com.sportoras.database.entity.Review;
 import com.sportoras.database.repository.ReviewRepository;
 import com.sportoras.service.dto.reviewDto.ReviewDto;
 import com.sportoras.service.exception.BadRequestException;
+import com.sportoras.service.exception.EntityDidntSaveException;
 import com.sportoras.service.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,13 +31,16 @@ public class ReviewService {
 
     @Transactional
     public Review saveReview(ReviewDto reviewDto) {
+        if (reviewDto.getText() == null) {
+            throw new BadRequestException("The form is filled incorrect. Write a review.");
+        }
         Review review = reviewRepository.save(Review.builder()
                 .user(reviewDto.getUser())
                 .date(LocalDate.now())
                 .text(reviewDto.getText())
                 .build());
-        if (review.getText() == null) {
-            throw new BadRequestException("The form is filled incorrect.");
+        if (review == null) {
+            throw new EntityDidntSaveException("Review not saved. Try again");
         }
         return review;
 
