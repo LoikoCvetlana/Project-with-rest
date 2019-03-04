@@ -12,6 +12,4 @@ public interface UserDetailRepository extends CrudRepository<UserDetail, Long> {
 
     UserDetail findByUser(User user);
 
-    UserDetail findAllByUserEmail(String email);
-
 }

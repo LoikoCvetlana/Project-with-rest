@@ -11,14 +11,14 @@ public class MaterialDto {
 
     private Long id;
     private String name;
+    private String description;
+
 
     public MaterialDto(Long id, String name, String description) {
         this.id = id;
         this.name = name;
         this.description = description;
     }
-
-    private String description;
 
     public MaterialDto(String name, String description) {
         this.name = name;

@@ -5,8 +5,6 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDate;
 
-import static org.hibernate.jpamodelgen.xml.jaxb.FetchType.EAGER;
-
 @Data
 @EqualsAndHashCode(of = "id")
 @ToString(exclude = "user")

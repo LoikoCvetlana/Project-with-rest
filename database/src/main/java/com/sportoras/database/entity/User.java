@@ -15,8 +15,6 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "user", schema = "oraz_storage")
-//@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-//@DiscriminatorColumn(name = "Role")
 public class User extends BaseEntity<Long> {
 
     @Column(name = "registration_date")
