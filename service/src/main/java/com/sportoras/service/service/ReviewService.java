@@ -43,7 +43,6 @@ public class ReviewService {
             throw new EntityDidntSaveException("Review not saved. Try again");
         }
         return review;
-
     }
 
     @Transactional

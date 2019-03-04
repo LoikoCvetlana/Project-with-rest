@@ -12,7 +12,6 @@ public class UserDetailsConverter implements Converter<User, UserDetails> {
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getEmail())
                 .password(user.getPassword())
-//                .password(passwordEncoder.encode(user.getPassword()))
                 .authorities(user.getRole().toString())
                 .build();
     }

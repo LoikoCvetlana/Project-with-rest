@@ -15,8 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
-import java.beans.Encoder;
-
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -54,7 +52,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         http
                 .csrf().disable();
-//
+
 //        http.
 //                authorizeRequests()
 //                .antMatchers("/product-save", "/material-save")
@@ -65,8 +63,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //                .authenticated()
 //                .and()
 //                .formLogin()
-//                .loginPage("/login")
-//                .defaultSuccessUrl("/my-page", true)
+//                .defaultSuccessUrl("/products", true)
 //                .and()
 //                .logout();
 

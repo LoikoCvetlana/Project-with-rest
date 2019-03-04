@@ -1,18 +1,15 @@
 package com.sportoras.service;
 
 import com.sportoras.database.entity.FullName;
-import com.sportoras.database.entity.Material;
 import com.sportoras.database.entity.User;
 import com.sportoras.database.entity.UserDetail;
 import com.sportoras.database.repository.UserDetailRepository;
 import com.sportoras.database.repository.UserRepository;
 import com.sportoras.service.configuration.ServiceConfiguration;
-import com.sportoras.service.dto.Material.MaterialDto;
 import com.sportoras.service.dto.userDto.UserBasicDto;
 import com.sportoras.service.dto.userDto.UserCreateDto;
 import com.sportoras.service.dto.userDto.UserDetailCreateDto;
 import com.sportoras.service.dto.userDto.UserDetailUpdateDto;
-import com.sportoras.service.exception.EntityAlreadyExistException;
 import com.sportoras.service.exception.EntityNotFoundException;
 import com.sportoras.service.service.UserDetailService;
 import com.sportoras.service.service.UserSaveServise;
@@ -25,7 +22,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -143,4 +139,5 @@ public class UserTest {
     public void checkFindByIdExceptin() {
         User user = userService.findUserById(100L);
     }
+
 }
